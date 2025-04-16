@@ -7,6 +7,8 @@ from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 import tempfile
 from pages.training_data import get_training_data
+from web_scrap import scrap
+from youtube_scrap import get_youtube_transcript
 load_dotenv()
 
 VECTORSTORE_PATH = "vectorstore.index"
@@ -71,9 +73,20 @@ def main():
     st.title("Prof. Dr Deepak Ravindran")
     st.subheader("The UK's Go-To Doctor in Pain Management")
     files = st.file_uploader("Upload PDFs/DOCx here", accept_multiple_files=True)
-    if st.button("Process Files") and files:
-        with st.spinner("Processing Files..."):
-            raw_text = get_text(files)
+    st.markdown("OR")
+    url = st.text_input("Enter URL to Scrap")
+    if st.button("Process") and files or url:
+        with st.spinner("Processing..."):
+            raw_text = ""
+            if files:
+                raw_text = get_text(files)
+            elif url:
+                if "youtube.com" in url:
+                    raw_text = get_youtube_transcript(url)
+                else:
+                    raw_text = scrap(url) 
+            elif files and url:
+                st.warning("Please choose either files or URL, not both.")
             training_data = get_training_data(raw_text)
             text_chunks = get_text_chunks(training_data)
             vectorstore = get_vectorstore(text_chunks, existing_vectorstore)
