@@ -70,14 +70,16 @@ def main():
     st.title("Prof. Dr Deepak Ravindran")
     if "messages" not in st.session_state:
         st.session_state.messages = []
-    if "conversation_chain" not in st.session_state:
+    if "vectorstore" not in st.session_state:
         vectorstore = load_vectorstore()
         if vectorstore:
             st.session_state.vectorstore = vectorstore
-            st.session_state.conversation_chain = get_conversation_chain(vectorstore)
+            st.session_state.conversation = get_conversation_chain(vectorstore)
         else:
             st.warning("⚠️ No vectorstore found. Please upload and process documents first.")
             return
+    if "conversation" not in st.session_state:
+        st.session_state.conversation = get_conversation_chain(st.session_state.vectorstore)
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
