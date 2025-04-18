@@ -68,10 +68,10 @@ def handle_user_input(user_question):
 def main():
     st.set_page_config(page_title="Prof. Dr Deepak Ravindran", layout="wide")
     st.title("Prof. Dr Deepak Ravindran")
-
     if "messages" not in st.session_state:
         st.session_state.messages = []
-
+    if "conversation" not in st.session_state:
+        st.session_state.conversation = []
     if "vectorstore" not in st.session_state:
         vectorstore = load_vectorstore()
         if vectorstore:
