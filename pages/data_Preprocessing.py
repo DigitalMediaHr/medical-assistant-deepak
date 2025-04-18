@@ -92,5 +92,6 @@ def main():
             vectorstore = get_vectorstore(text_chunks, existing_vectorstore)
             st.session_state.vectorstore = vectorstore
             st.success("Uploaded Successfully!")
+            st.markdown(f"**Preview:**\n\n{raw_text}")
 
 main()
